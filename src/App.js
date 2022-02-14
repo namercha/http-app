@@ -26,8 +26,18 @@ class App extends Component {
     this.setState({ posts });
   };
 
-  handleUpdate = (post) => {
-    console.log('Update', post);
+  handleUpdate = async (post) => {
+    post.title = 'UPDATED';
+    // For PUT method, have to send entire post object
+    await axios.put(apiEndpoint + '/' + post.id, post);
+
+    // For POST method, have to send only the property of the object being updated
+    // axios.patch(apiEndpoint + "/" + post.id, {title: post.title});
+
+    const posts = [...this.state.posts];
+    const index = posts.indexOf(post);
+    posts[index] = { ...post };
+    this.setState({ posts });
   };
 
   handleDelete = (post) => {
