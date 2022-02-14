@@ -1,21 +1,31 @@
-import React, { Component } from "react";
-import "./App.css";
+import React, { Component } from 'react';
+import axios from 'axios';
+import './App.css';
 
 class App extends Component {
   state = {
-    posts: []
+    posts: [],
   };
+
+  async componentDidMount() {
+    // const promise = axios.get('https://jsonplaceholder.typicode.com/posts');
+    // const response = await promise;
+    const { data: posts } = await axios.get(
+      'https://jsonplaceholder.typicode.com/posts'
+    );
+    this.setState({ posts });
+  }
 
   handleAdd = () => {
-    console.log("Add");
+    console.log('Add');
   };
 
-  handleUpdate = post => {
-    console.log("Update", post);
+  handleUpdate = (post) => {
+    console.log('Update', post);
   };
 
-  handleDelete = post => {
-    console.log("Delete", post);
+  handleDelete = (post) => {
+    console.log('Delete', post);
   };
 
   render() {
@@ -27,15 +37,13 @@ class App extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Update</th>
-              <th>Delete</th>
+              <th> Title </th> <th> Update </th> <th> Delete </th>
             </tr>
           </thead>
           <tbody>
-            {this.state.posts.map(post => (
+            {this.state.posts.map((post) => (
               <tr key={post.id}>
-                <td>{post.title}</td>
+                <td> {post.title} </td>
                 <td>
                   <button
                     className="btn btn-info btn-sm"
