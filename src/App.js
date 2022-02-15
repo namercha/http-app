@@ -50,7 +50,7 @@ class App extends Component {
 
     try {
       // Make the http call
-      await httpService.delete(config.apiEndpoint + '/' + post.id);
+      await httpService.delete('s' + config.apiEndpoint + '/' + post.id);
     } catch (ex) {
       // Expected errors: 404 not found, 400 bad request - CLIENT ERRORS
       //  - Display a specific error message
