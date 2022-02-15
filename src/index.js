@@ -6,7 +6,8 @@ import './index.css';
 import logger from './services/logService';
 import 'bootstrap/dist/css/bootstrap.css';
 
-logger.init();
+// Enable Sentry logging service
+//logger.init();
 
 ReactDOM.render( < App / > , document.getElementById('root'));
 registerServiceWorker();
