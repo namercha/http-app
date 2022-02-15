@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import httpService from './services/httpService';
 import './App.css';
-
-const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
+import config from './config.json';
 
 class App extends Component {
   state = {
@@ -10,16 +9,16 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    // const promise = axios.get('https://jsonplaceholder.typicode.com/posts');
+    // const promise = httpService.get('https://jsonplaceholder.typicode.com/posts');
     // const response = await promise;
-    const { data: posts } = await axios.get(apiEndpoint);
+    const { data: posts } = await httpService.get(config.apiEndpoint);
     this.setState({ posts });
   }
 
   handleAdd = async () => {
     console.log('Add');
     const obj = { title: 'a', body: 'b' };
-    const { data: post } = await axios.post(apiEndpoint, obj);
+    const { data: post } = await httpService.post(config.apiEndpoint, obj);
     console.log(post);
 
     const posts = [post, ...this.state.posts];
@@ -29,10 +28,10 @@ class App extends Component {
   handleUpdate = async (post) => {
     post.title = 'UPDATED';
     // For PUT method, have to send entire post object
-    await axios.put(apiEndpoint + '/' + post.id, post);
+    await httpService.put(config.apiEndpoint + '/' + post.id, post);
 
     // For POST method, have to send only the property of the object being updated
-    // axios.patch(apiEndpoint + "/" + post.id, {title: post.title});
+    // httpService.patch(config.apiEndpoint + "/" + post.id, {title: post.title});
 
     const posts = [...this.state.posts];
     const index = posts.indexOf(post);
@@ -49,9 +48,16 @@ class App extends Component {
 
     try {
       // Make the http call
-      await axios.delete(apiEndpoint + '/' + post.id);
+      await httpService.delete(config.apiEndpoint + '/' + post.id);
     } catch (ex) {
-      alert('Something failed while deleting a post. ');
+      // Expected errors: 404 not found, 400 bad request - CLIENT ERRORS
+      //  - Display a specific error message
+      if (ex.response && ex.response.status === 404)
+        alert('This post has already been deleted.');
+      // Unexpected errors: network down, server down, database down
+      //  - Log these errors
+      //  - Display a generic and friendly error message
+
       this.setState({ originalPosts });
     }
   };
